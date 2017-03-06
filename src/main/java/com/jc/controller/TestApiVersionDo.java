@@ -4,7 +4,10 @@ import com.jc.util.apiVersion.ApiParam;
 import com.jc.util.apiVersion.DefaultValueEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 
 /**
@@ -14,7 +17,7 @@ import java.math.BigDecimal;
 @Controller
 public class TestApiVersionDo {
     public void test1(){}
-    private String test2(){return "调用成功 没有参数";}
+    public String test2(@PathVariable("path") String path){return path;}
     public String test3(){
         return "调用成功 没有参数";
     }
@@ -27,4 +30,5 @@ public class TestApiVersionDo {
     public String test6(@ApiParam("amount") BigDecimal amount, @ApiParam(value = "l",required = false) long l, @ApiParam(value = "b",required = false,defaultValue = DefaultValueEnum.TRUE) Boolean b){
         return "调用成功 三个参数 amount:"+amount+" l:"+l+" b:"+b;
     }
+    public String test7(@ApiParam("request") HttpServletRequest request, @ApiParam("response")HttpServletResponse response){ return "ok";}
 }

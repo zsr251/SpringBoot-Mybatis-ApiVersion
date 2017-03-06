@@ -3,6 +3,8 @@ package com.jc.util.apiVersion;
 import com.jc.controller.TestApiVersionDo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -43,6 +45,10 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
         if (apiVersion == null) {
             return true;
         }
+        //controller中调用的方法
+        RequestMapping requestMapping =  method.getMethodAnnotation(RequestMapping.class);
+        String [] mappingPaths = requestMapping.value()[0].split("/");
+        String [] requestPaths = request.getRequestURI().split("/");
 
         Class cls = apiVersion.targetClass();
         Object o;
@@ -94,20 +100,34 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
             Annotation[] annotations = annotationss[i];
             if (annotations.length < 1)
                 throw new ApiVersionException("存在未添加@ApiParam注解参数的方法 :" + targetMethod.getName());
-            //是否存在ApiParam注解
+            //是否存在ApiParam或PathVariable注解
             boolean hasAnn = false;
             for (int j = 0; j < annotations.length; j++) {
                 Annotation annotation = annotations[j];
                 if (annotation instanceof ApiParam) {
+                    if (paramTypes[i].equals(HttpServletRequest.class)){
+                        paramList[i] = request;
+                    }else if (paramTypes[i].equals(HttpServletResponse.class)) {
+                        paramList[i] = response;
+                    }else{
+                        //为参数赋值
+                        paramList[i] = getParam(requestParam, (ApiParam) annotation, paramTypes[i]);
+                        hasAnn = true;
+                        break;
+                    }
+                }
+                if (annotation instanceof PathVariable){
                     //为参数赋值
-                    paramList[i] = getParam(requestParam, (ApiParam) annotation, paramTypes[i]);
+                    paramList[i] = getPathVariable(requestPaths,mappingPaths,(PathVariable) annotation,paramTypes[i]);
                     hasAnn = true;
                     break;
                 }
+
             }
             if (!hasAnn)
-                throw new ApiVersionException("存在未添加@ApiParam注解参数的方法 :" + targetMethod.getName());
+                throw new ApiVersionException("存在未添加@ApiParam或@PathVariable注解参数的方法 :" + targetMethod.getName());
         }
+
 
         //反射方法调用
         String result = (String) targetMethod.invoke(o, paramList);
@@ -129,7 +149,51 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
         out.flush();
         out.close();
     }
-
+    /**
+     * 获得URL中指定的参数(目前支持基础路径参数 不支持路径中添加正则)
+     * @param requestPaths 请求参数的路径 / 分隔
+     * @param mappingPaths @RequestMapping 参数的路径 / 分隔
+     * @param pathVariable URL路径参数
+     * @param paramType 参数类型
+     * @return
+     */
+    private Object getPathVariable(String[] requestPaths, String[] mappingPaths, PathVariable pathVariable, Class<?> paramType){
+        if (mappingPaths.length <1 || pathVariable == null||requestPaths.length<1){
+            throw new ApiVersionException("缺少URL路径参数");
+        }
+        //倒数第几个参数
+        int ri = 0;
+        for (int i = 0; i < mappingPaths.length; i++) {
+            if (mappingPaths[i].trim().equals("{"+pathVariable.value()+"}")){
+                ri = mappingPaths.length - i;
+                break;
+            }
+        }
+        if (ri == 0){
+            throw new ApiVersionException("未找到指定的@PathVariable:"+pathVariable.value());
+        }
+        String v = requestPaths[requestPaths.length-ri];
+        try {
+            if (paramType.equals(String.class)) {
+                return v;
+            }
+            if (paramType.equals(Boolean.class) || "boolean".equals(paramType.getName())) {
+                return Boolean.parseBoolean(v);
+            }
+            if (paramType.equals(Integer.class) || "int".equals(paramType.getName())) {
+                return Integer.parseInt(v);
+            }
+            if (paramType.equals(Long.class) || "long".equals(paramType.getName())) {
+                return Long.parseLong(v);
+            }
+            if (paramType.equals(BigDecimal.class)) {
+                return new BigDecimal(v);
+            }
+        } catch (Exception e) {
+            throw new ApiVersionException("@PathVariable参数格式化失败 :" + pathVariable.value(), e);
+        }
+        return v;
+    }
     /**
      * 获得参数的值
      *
