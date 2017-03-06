@@ -1,6 +1,7 @@
 package com.jc.controller;
 
 import com.jc.util.apiVersion.ApiParam;
+import com.jc.util.apiVersion.ApiVersion;
 import com.jc.util.apiVersion.DefaultValueEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 @Controller
 public class TestApiVersionDo {
     public void test1(){}
-    public String test2(@PathVariable("path") String path){return path;}
+    public String test2(@PathVariable("a") String path){return "URL参数值:"+path;}
     public String test3(){
         return "调用成功 没有参数";
     }
@@ -30,5 +31,6 @@ public class TestApiVersionDo {
     public String test6(@ApiParam("amount") BigDecimal amount, @ApiParam(value = "l",required = false) long l, @ApiParam(value = "b",required = false,defaultValue = DefaultValueEnum.TRUE) Boolean b){
         return "调用成功 三个参数 amount:"+amount+" l:"+l+" b:"+b;
     }
-    public String test7(@ApiParam("request") HttpServletRequest request, @ApiParam("response")HttpServletResponse response){ return "ok";}
+    public String test7(@ApiParam("request") HttpServletRequest request, @ApiParam("response")HttpServletResponse response){ return request.getRequestURI();}
+    public String test8(String a, @ApiParam("b") String b){return "成功";}
 }

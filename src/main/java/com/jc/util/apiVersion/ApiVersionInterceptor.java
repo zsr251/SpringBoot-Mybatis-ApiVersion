@@ -112,9 +112,9 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
                     }else{
                         //为参数赋值
                         paramList[i] = getParam(requestParam, (ApiParam) annotation, paramTypes[i]);
-                        hasAnn = true;
-                        break;
                     }
+                    hasAnn = true;
+                    break;
                 }
                 if (annotation instanceof PathVariable){
                     //为参数赋值

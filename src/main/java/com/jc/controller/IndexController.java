@@ -86,6 +86,10 @@ public class IndexController {
     @ApiVersion(targetClass = TestApiVersionDo.class)
     @RequestMapping("/api/test")
     public void test(){}
+
+    /**
+     * API版本管理 指定处理的方法前缀
+     */
     @ApiVersion(targetClass = TestApiVersionDo.class,methodPreName = "test")
     @RequestMapping("/api/testno")
     public void testNo(){}
@@ -95,6 +99,10 @@ public class IndexController {
         return "没有参数";
     }
 
+    /**
+     * API版本管理 处理方法中使用@PathVariable
+     */
+    @ApiVersion(targetClass = TestApiVersionDo.class,methodPreName = "test")
     @RequestMapping("/test/{a}")
     public String testOne(@PathVariable("a") String a){
         return a;
