@@ -23,5 +23,5 @@ public @interface ApiParam {
     /**
      * 值非必须时 如果未传值 默认值
      */
-    DefaultValueEnum defaultValue() default DefaultValueEnum.DEFAULT;
+    DefaultValueEnum defaultValue() default DefaultValueEnum.NULL;
 }
