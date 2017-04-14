@@ -48,7 +48,7 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
         //controller中调用的方法
         RequestMapping requestMapping =  method.getMethodAnnotation(RequestMapping.class);
         String [] mappingPaths = requestMapping.value()[0].split("/");
-        String [] requestPaths = request.getRequestURI().split("/");
+        String [] requestPaths = request.getRequestURI().split("\\.")[0].split("/");
 
         Class cls = apiVersion.targetClass();
         Object o;
