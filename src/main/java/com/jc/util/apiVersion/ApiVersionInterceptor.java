@@ -46,11 +46,7 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
         if (apiVersion == null) {
             return true;
         }
-        //判断如果是返回页面的方法 则不纳入版本控制
-        ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
-        if (responseBody == null){
-            return true;
-        }
+        //TODO 判断如果是返回页面的方法 则不纳入版本控制
         //controller中调用的方法
         RequestMapping requestMapping =  method.getMethodAnnotation(RequestMapping.class);
         String [] mappingPaths = requestMapping.value()[0].split("/");
