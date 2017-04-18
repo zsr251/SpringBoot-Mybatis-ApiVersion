@@ -31,6 +31,7 @@ public class IndexController {
      * @param model
      * @return
      */
+    @ApiVersion(targetClass = TestApiVersionDo.class,methodPreName = "test")
     @RequestMapping("/")
     String index(Model model) {
         Person single = new Person("aa",11);

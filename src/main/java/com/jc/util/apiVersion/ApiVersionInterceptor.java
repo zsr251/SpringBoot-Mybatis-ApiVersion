@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -43,6 +44,11 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
         ApiVersion apiVersion = method.getMethodAnnotation(ApiVersion.class);
         //判断是否纳入接口版本控制
         if (apiVersion == null) {
+            return true;
+        }
+        //判断如果是返回页面的方法 则不纳入版本控制
+        ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
+        if (responseBody == null){
             return true;
         }
         //controller中调用的方法
@@ -263,6 +269,9 @@ public class ApiVersionInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        if (!modelAndView.isEmpty()){
+            System.out.println(modelAndView.getViewName());
+        }
+        modelAndView.getModel();
     }
 }
