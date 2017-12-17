@@ -28,7 +28,7 @@ public class TestApiVersionDo {
     public String test5(@ApiParam("av") Integer av,@ApiParam("a") String app,@ApiParam(value = "b",required = false) String b){
         return "调用成功 三个参数 app:"+app+" av:"+av+" b:"+b;
     }
-    public String test6(@ApiParam("amount") BigDecimal amount, @ApiParam(value = "l",required = false) long l, @ApiParam(value = "b",required = false,defaultValue = DefaultValueEnum.TRUE) Boolean b){
+    public String test6(@ApiParam("amount") BigDecimal amount, @ApiParam(value = "l",required = false) Long l, @ApiParam(value = "b",required = false,defaultValue = DefaultValueEnum.TRUE) Boolean b){
         return "调用成功 三个参数 amount:"+amount+" l:"+l+" b:"+b;
     }
     public String test7(@ApiParam("request") HttpServletRequest request, @ApiParam("response")HttpServletResponse response){ return request.getRequestURI();}

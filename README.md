@@ -28,6 +28,17 @@ spring boot实现接口多版本共存 灵活修改。 另：包含了spring boo
 | ApiVersionException  | 异常       | 工具解析中抛出的异常|
 | ApiVersionInterceptor| 接口拦截器  | 核心类，进行所有处理操作|
 
+## 了解测试路径
+- 不传入接口版本号，默认为1
+- 业务处理方法返回值必须为String：http://localhost:8080/api/test?av=1
+- PathValue参数获取：http://localhost:8080/test/11111?av=2
+- 无参数正常调用：http://localhost:8080/api/test?av=3
+- 带参数调用：http://localhost:8080/api/test?av=4&a=param
+- 允许非必须参数：http://localhost:8080/api/test?av=5&a=param
+- 可指定默认值：http://localhost:8080/api/test?av=6&amount=100
+- 获得request和response：http://localhost:8080/api/test?av=7
+- 参数必须加注解：http://localhost:8080/api/test?av=8
+
 ## 其他
 欢迎提出意见和完善:)
 将近一年没有更新了～ 准备在2017-12-31优化维护一版:)
