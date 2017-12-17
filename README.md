@@ -44,4 +44,4 @@ spring boot实现接口多版本共存 灵活修改。 另：包含了spring boo
 将近一年没有更新了～ 准备在2017-12-31优化维护一版:)
 
 ## 欢迎关注我的公众号和[JavaSoSo博客](http://www.javasoso.com)
-![JavaSoSo公众号](https://i.loli.net/2017/11/24/5a177ebc75827.jpg) 
+![JavaSoSo公众号](http://omhmq0oao.bkt.clouddn.com/5326136b16b04d7398dbbd513e7378d3.jpg)
